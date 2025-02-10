@@ -1,39 +1,31 @@
 package com.pms.dao.impl;
 
 import com.pms.dao.CustomerDao;
-import com.pms.model.Category;
-import com.pms.model.Policy;
-
+import com.pms.model.SubCategory;
 import java.util.List;
 
 public class CustomerDaoImpl implements CustomerDao {
-    private List<Category> categories;
-    private List<Policy> policies;
-
-    public CustomerDaoImpl(List<Category> categories, List<Policy> policies) {
-        this.categories = categories;
+    
+    private List<SubCategory> policies;
+    
+    public CustomerDaoImpl(List<SubCategory> policies) {
         this.policies = policies;
     }
-
+    
     @Override
-    public List<Category> getCategories() {
-        return categories;
-    }
-
-    @Override
-    public List<Policy> getPolicies() {
+    public List<SubCategory> getPolicies() {
         return policies;
     }
-
+    
     @Override
-    public boolean applyPolicy(int policyId) {  // Now returns boolean
-        for (Policy policy : policies) {
-            if (policy.getId() == policyId) {
-                System.out.println("Policy applied: " + policy.getName());
-                return true; // Return true if policy is applied
+    public boolean applyPolicy(int policyId) {
+        for (SubCategory policy : policies) {
+            if (policy.getSubCategoryId() == policyId) {
+                System.out.println("Policy applied: " + policy.getSubCategoryName());
+                return true;
             }
         }
-        System.out.println("Policy not found.");
-        return false; // Return false if policy is not found
+        System.out.println("Policy ID " + policyId + " not found.");
+        return false;
     }
 }

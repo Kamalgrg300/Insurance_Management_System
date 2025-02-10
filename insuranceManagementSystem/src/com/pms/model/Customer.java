@@ -1,4 +1,3 @@
-// Customer.java
 package com.pms.model;
 
 public class Customer extends User {

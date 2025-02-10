@@ -8,14 +8,12 @@ import java.util.*;
 
 public class InsuranceManagementSystem {
     public static void main(String[] args) {
-       
         UserDao userDao = new UserDaoImpl();
         AdminDao adminDao = new AdminDaoImpl();
-        CustomerDao customerDao = new CustomerDaoImpl(adminDao.getCategories(), adminDao.getPolicies());
-
+        
         boolean running = true;
         Scanner scanner = new Scanner(System.in);
-
+        
         while (running) {
             System.out.println("\nInsurance Management System");
             System.out.println("1. Register");
@@ -23,25 +21,26 @@ public class InsuranceManagementSystem {
             System.out.println("3. Forget Password");
             System.out.println("4. Exit");
             System.out.print("Enter your choice: ");
-
+            
             if (!scanner.hasNextInt()) {
                 System.out.println("Invalid input! Please enter a number between 1-4.");
-                scanner.next();
+                scanner.next(); // Consume invalid input
                 continue;
             }
             
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
-
+            
             switch (choice) {
                 case 1: {
+                    // Register user
                     System.out.print("Enter username: ");
                     String username = scanner.nextLine();
                     System.out.print("Enter password: ");
                     String password = scanner.nextLine();
                     System.out.print("Enter email: ");
                     String email = scanner.nextLine();
-
+                    
                     String role;
                     while (true) {
                         System.out.print("Are you an Admin? (yes/no): ");
@@ -52,7 +51,7 @@ public class InsuranceManagementSystem {
                             System.out.println("Invalid input! Please enter 'yes' or 'no'.");
                         }
                     }
-
+                    
                     if (role.equals("yes")) {
                         userDao.register(new Admin(username, password, email));
                         System.out.println("Admin registered successfully.");
@@ -63,17 +62,19 @@ public class InsuranceManagementSystem {
                     break;
                 }
                 case 2: {
+                    // Login user
                     System.out.print("Enter username: ");
-                    String username = scanner.nextLine();
+                    String loginUsername = scanner.nextLine();
                     System.out.print("Enter password: ");
-                    String password = scanner.nextLine();
-                    User user = userDao.login(username, password);
+                    String loginPassword = scanner.nextLine();
+                    
+                    User user = userDao.login(loginUsername, loginPassword);
                     if (user != null) {
                         System.out.println("Welcome, " + user.getUsername());
                         if (user instanceof Admin) {
-                            UserDetails.adminPanel(scanner, adminDao);  // Corrected call
+                            UserDetails.adminPanel(scanner, adminDao);
                         } else {
-                            UserDetails.customerPanel(scanner, customerDao);  // Corrected call
+                            UserDetails.customerPanel(scanner, adminDao);
                         }
                     } else {
                         System.out.println("Invalid username or password.");
@@ -81,13 +82,13 @@ public class InsuranceManagementSystem {
                     break;
                 }
                 case 3: {
+                    // Forget password
                     System.out.print("Enter email: ");
-                    String email = scanner.nextLine();
-                    userDao.forgetPassword(email);
+                    String forgetEmail = scanner.nextLine();
+                    userDao.forgetPassword(forgetEmail);
                     break;
                 }
                 case 4: {
-                    scanner.close();
                     System.out.println("Exiting system. Thank you!");
                     running = false;
                     break;
@@ -96,5 +97,6 @@ public class InsuranceManagementSystem {
                     System.out.println("Invalid choice, please try again.");
             }
         }
+        // Note: The scanner is not closed here to avoid issues if further input is needed.
     }
 }

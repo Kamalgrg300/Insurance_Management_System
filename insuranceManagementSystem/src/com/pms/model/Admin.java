@@ -1,4 +1,3 @@
-// Admin.java
 package com.pms.model;
 
 public class Admin extends User {
