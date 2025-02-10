@@ -1,4 +1,3 @@
-// CustomerDao.java
 package com.pms.dao;
 
 import com.pms.model.Category;
@@ -9,5 +8,7 @@ import java.util.List;
 public interface CustomerDao {
     List<Category> getCategories();
     List<Policy> getPolicies();
-    void applyPolicy(int policyId);
+    
+    // Change return type from void to boolean
+    boolean applyPolicy(int policyId);
 }

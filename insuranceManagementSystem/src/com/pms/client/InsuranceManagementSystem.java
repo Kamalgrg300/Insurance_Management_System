@@ -13,36 +13,47 @@ public class InsuranceManagementSystem {
         AdminDao adminDao = new AdminDaoImpl();
         CustomerDao customerDao = new CustomerDaoImpl(adminDao.getCategories(), adminDao.getPolicies());
 
-        boolean running = true , correctInput = true;
-        
+        boolean running = true;
+        Scanner scanner = new Scanner(System.in);
 
-        while (running ) {
+        while (running) {
             System.out.println("\nInsurance Management System");
             System.out.println("1. Register");
             System.out.println("2. Login");
             System.out.println("3. Forget Password");
             System.out.println("4. Exit");
             System.out.print("Enter your choice: ");
-           
-            Scanner scanner = new Scanner(System.in);
-          
-       
-          
-              
+
+            if (!scanner.hasNextInt()) {
+                System.out.println("Invalid input! Please enter a number between 1-4.");
+                scanner.next();
+                continue;
+            }
             
-            	 int choice = scanner.nextInt();
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
             switch (choice) {
                 case 1: {
                     System.out.print("Enter username: ");
-                    String username = scanner.next();
+                    String username = scanner.nextLine();
                     System.out.print("Enter password: ");
-                    String password = scanner.next();
+                    String password = scanner.nextLine();
                     System.out.print("Enter email: ");
                     String email = scanner.nextLine();
-                    System.out.print("Are you an Admin? (yes/no): ");
-                    String role = scanner.nextLine();
-                    
-                    if (role.equalsIgnoreCase("yes")) {
+
+                    String role;
+                    while (true) {
+                        System.out.print("Are you an Admin? (yes/no): ");
+                        role = scanner.nextLine().trim().toLowerCase();
+                        if (role.equals("yes") || role.equals("no")) {
+                            break;
+                        } else {
+                            System.out.println("Invalid input! Please enter 'yes' or 'no'.");
+                        }
+                    }
+
+                    if (role.equals("yes")) {
                         userDao.register(new Admin(username, password, email));
                         System.out.println("Admin registered successfully.");
                     } else {
@@ -53,19 +64,16 @@ public class InsuranceManagementSystem {
                 }
                 case 2: {
                     System.out.print("Enter username: ");
-                    String username = scanner.next();
+                    String username = scanner.nextLine();
                     System.out.print("Enter password: ");
-                    String password = scanner.next();
+                    String password = scanner.nextLine();
                     User user = userDao.login(username, password);
                     if (user != null) {
                         System.out.println("Welcome, " + user.getUsername());
-                        UserDetails u = new UserDetails();
-                        if (user instanceof
-                        		Admin) {
-                        	
-                            u.adminPanel(scanner, adminDao);
+                        if (user instanceof Admin) {
+                            UserDetails.adminPanel(scanner, adminDao);  // Corrected call
                         } else {
-                            u.customerPanel(scanner, customerDao);
+                            UserDetails.customerPanel(scanner, customerDao);  // Corrected call
                         }
                     } else {
                         System.out.println("Invalid username or password.");
@@ -74,12 +82,12 @@ public class InsuranceManagementSystem {
                 }
                 case 3: {
                     System.out.print("Enter email: ");
-                    String email = scanner.next();
+                    String email = scanner.nextLine();
                     userDao.forgetPassword(email);
                     break;
                 }
                 case 4: {
-                	scanner.close();
+                    scanner.close();
                     System.out.println("Exiting system. Thank you!");
                     running = false;
                     break;
@@ -88,12 +96,5 @@ public class InsuranceManagementSystem {
                     System.out.println("Invalid choice, please try again.");
             }
         }
-            
-        
-        }
     }
-
-	
-    
-    
-   
+}

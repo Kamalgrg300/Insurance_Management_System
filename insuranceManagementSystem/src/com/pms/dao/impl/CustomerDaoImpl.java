@@ -1,4 +1,3 @@
-// CustomerDaoImpl.java
 package com.pms.dao.impl;
 
 import com.pms.dao.CustomerDao;
@@ -27,13 +26,14 @@ public class CustomerDaoImpl implements CustomerDao {
     }
 
     @Override
-    public void applyPolicy(int policyId) {
+    public boolean applyPolicy(int policyId) {  // Now returns boolean
         for (Policy policy : policies) {
             if (policy.getId() == policyId) {
                 System.out.println("Policy applied: " + policy.getName());
-                return;
+                return true; // Return true if policy is applied
             }
         }
         System.out.println("Policy not found.");
+        return false; // Return false if policy is not found
     }
 }
